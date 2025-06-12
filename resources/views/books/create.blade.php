@@ -29,7 +29,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label fw-bold">Price</label>
-                <input type="number" step="10" start="49" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price') }}">
+                <input type="number" name="price" step="1" class="form-control @error('price') is-invalid @enderror" value="{{ old('price') }}">
                 @error('price')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
@@ -87,17 +87,24 @@
             <div class="mb-3">
                 <label class="form-label fw-bold">Authors</label>
                 <div id="authors">
-                    <div class="row mb-2 author-row">
-                        <div class="col">
-                            <input type="text" name="authors[0][name]" class="form-control" placeholder="Name" required>
+                    @php
+                        $oldAuthors = old('authors',[['name'=>'','email'=>'']]);
+                    @endphp
+
+                    @foreach ($oldAuthors as $index=>$author)
+                        <div class="row mb-2 author-row">
+                            <div class="col">
+                                <input type="text" name="authors[{{ $index }}][name]" class="form-control @error("authors.$index.name") is-invalid @enderror" placeholder="Name" value="{{ old("authors.$index.name",$author['name']) }}" required>
+                            </div>
+                            <div class="col">
+                                <input type="email" name="authors[{{ $index }}][email]" class="form-control @error("authors.$index.email") is-invalid @enderror" value="{{ old("authors.$index.email",$author['email']) }}" placeholder="Email" required>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger removeAuthor ">Remove</button>
+                            </div>
                         </div>
-                        <div class="col">
-                            <input type="email" name="authors[0][email]" class="form-control" placeholder="Email" required>
-                        </div>
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-danger removeAuthor ">Remove</button>
-                        </div>
-                    </div>
+                    @endforeach
+
                 </div>
                 <button class="btn btn-sm btn-secondary" type="button" id="addAuthor">Add Author</button>
             </div>
@@ -125,17 +132,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <input type="text" name="location" class="form-control @error('location') is-invalid @enderror" value="{{ old('location') }}">
-                            </td>
-                            <td>
-                                <input type="number" class="form-control @error('quantity') is-invalid @enderror" name="quantity" value="{{ old('quantity') }}">
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger removeStock ">Remove</button>
-                            </td>
-                        </tr>
+                        @php
+                            $oldStocks = old('stocks',[['location'=>'','quantity'=>'']]);
+                        @endphp
+
+                        @foreach ($oldStocks as $index=>$stock)
+                            <tr>
+                                <td>
+                                    <input type="text" name="stocks[{{ $index }}][location]" class="form-control @error("stocks.$index.location") is-invalid @enderror" value="{{ old("stocks.$index.location", $stock['location']) }}">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control @error("stock.$index.quantity") is-invalid @enderror" name="stocks[{{ $index }}][quantity]" value="{{ old("stocks.$index.quantity",$stock['quantity']) }}">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger removeStock ">Remove</button>
+                                </td>
+                            </tr>
+                        @endforeach
+
                     </tbody>
                 </table>
                 <div class="text-end">
@@ -151,83 +165,83 @@
 
 @push('scripts')
     <script>
-       let authorCount = 1;
-let stockCount = 1;
+        let authorCount = 1;
+        let stockCount = 1;
 
-$('#addAuthor').click(function(){
-    if(authorCount < 3){
-        $('#authors').append(`
-            <div class="row mb-2 author-row">
-                <div class="col">
-                    <input type="text" name="authors[${authorCount}][name]" class="form-control" placeholder="Name" required>
-                </div>
-                <div class="col">
-                    <input type="email" name="authors[${authorCount}][email]" class="form-control" placeholder="Email" required>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-danger removeAuthor">Remove</button>
-                </div>
-            </div>
-        `);
-        $('.removeAuthor').removeClass('d-none');
-        authorCount++;
-    }
-});
+        $('#addAuthor').click(function(){
+            if(authorCount < 3){
+                $('#authors').append(`
+                    <div class="row mb-2 author-row">
+                        <div class="col">
+                            <input type="text" name="authors[${authorCount}][name]" class="form-control" placeholder="Name" required>
+                        </div>
+                        <div class="col">
+                            <input type="email" name="authors[${authorCount}][email]" class="form-control" placeholder="Email" required>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-danger removeAuthor">Remove</button>
+                        </div>
+                    </div>
+                `);
+                $('.removeAuthor').removeClass('d-none');
+                authorCount++;
+            }
+        });
 
-$('#authors').on('click','.removeAuthor',function(){
-    $(this).closest('.author-row').remove();
-    authorCount--;
-});
+        $('#authors').on('click','.removeAuthor',function(){
+            $(this).closest('.author-row').remove();
+            authorCount--;
+        });
 
-$('#addStock').click(function(){
-    if(stockCount < 3){
-        $('#stock_detail tbody').append(`
-            <tr>
-                <td><input type="text" name="stocks[${stockCount}][location]" class="form-control"></td>
-                <td><input type="number" name="stocks[${stockCount}][quantity]" class="form-control"></td>
-                <td><button type="button" class="btn btn-danger removeStock">Remove</button></td>
-            </tr>
-        `);
-        $('.removeStock').removeClass('d-none');
-        stockCount++;
-    } else {
-        alert("Maximum 3 Stock Entries Allowed");
-    }
-});
+        $('#addStock').click(function(){
+            if(stockCount < 3){
+                $('#stock_detail tbody').append(`
+                    <tr>
+                        <td><input type="text" name="stocks[${stockCount}][location]" class="form-control"></td>
+                        <td><input type="number" name="stocks[${stockCount}][quantity]" class="form-control"></td>
+                        <td><button type="button" class="btn btn-danger removeStock">Remove</button></td>
+                    </tr>
+                `);
+                $('.removeStock').removeClass('d-none');
+                stockCount++;
+            } else {
+                alert("Maximum 3 Stock Entries Allowed");
+            }
+        });
 
-$(document).on('click','.removeStock',function(){
-    $(this).closest('tr').remove();
-    stockCount--;
-});
+        $(document).on('click','.removeStock',function(){
+            $(this).closest('tr').remove();
+            stockCount--;
+        });
 
-// Country -> State AJAX
-$(document).ready(function(){
-    $('#country').on('change',function(){
-        let country = $(this).val();
-        let state = $('#state');
+        // Country -> State AJAX
+        $(document).ready(function(){
+            $('#country').on('change',function(){
+                let country = $(this).val();
+                let state = $('#state');
 
-        state.prop('disabled', true).html("<option value=''>--Loading--</option>");
+                state.prop('disabled', true).html("<option value=''>--Loading--</option>");
 
-        if(country){
-            $.ajax({
-                url: '/get-states/' + country,
-                type: 'GET',
-                success: function(states){
-                    let options = "<option value=''>--SELECT STATE--</option>";
-                    $.each(states, function(index, stateObj){
-                        options += "<option value='" + stateObj.id + "'>" + stateObj.name + "</option>";
+                if(country){
+                    $.ajax({
+                        url: '/get-states/' + country,
+                        type: 'GET',
+                        success: function(states){
+                            let options = "<option value=''>--SELECT STATE--</option>";
+                            $.each(states, function(index, stateObj){
+                                options += "<option value='" + stateObj.id + "'>" + stateObj.name + "</option>";
+                            });
+                            state.prop('disabled', false).html(options);
+                        },
+                        error: function(){
+                            state.html("<option value=''>--ERROR LOADING STATES--</option>");
+                        }
                     });
-                    state.prop('disabled', false).html(options);
-                },
-                error: function(){
-                    state.html("<option value=''>--ERROR LOADING STATES--</option>");
+                } else {
+                    state.prop('disabled', true).html('<option value="">--SELECT STATE--</option>');
                 }
             });
-        } else {
-            state.prop('disabled', true).html('<option value="">--SELECT STATE--</option>');
-        }
-    });
-});
+        });
 
     </script>
 @endpush

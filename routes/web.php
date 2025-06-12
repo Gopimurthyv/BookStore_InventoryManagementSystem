@@ -14,6 +14,14 @@ Route::prefix('/books')->group(function(){
     Route::get('/edit/{id}',[BookController::class,'edit'])->name('books.edit');
     Route::post('/edit/{id}',[BookController::class,'update'])->name('books.update');
     Route::get('/delete/{id}',[BookController::class,'destroy'])->name('books.destroy');
+    Route::get('/trash',[BookController::class,'trash'])->name('books.trash');
+    Route::post('/restore/{id}',[BookController::class,'restore'])->name('books.restore');
+    Route::get('/permanent-delete/{id}',[BookController::class,'forceDelete'])->name('books.delete');
+
+    Route::get('/export-excel',[BookController::class,'exportExcel'])->name('books.export.excel');
+    Route::get('/export-pdf',[BookController::class,'exportExcel'])->name('books.export.pdf');
+
 });
 
 Route::get('/get-states/{country}',[BookController::class,'getStates'])->name('books.getStates');
+
