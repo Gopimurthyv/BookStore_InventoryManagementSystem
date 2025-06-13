@@ -22,5 +22,34 @@
     </section>
 
     @include('layout.import')
+
+    <script>
+            $('#search').on('keyup',function(){
+                let query = $(this).val();
+                $.ajax({
+                    url: "{{ route('books.search') }}",
+                    type: 'GET',
+                    data: {search: query},
+                    success: function(data){
+                        $('#books-table').html(data);
+                    }
+                })
+            })
+
+            $(document).ready(function(){
+                $('#categoryFilter').on('change', function(){
+                    let category = $(this).val();
+
+                    $.ajax({
+                        url:"{{ route('books.category.filter') }}",
+                        type: 'GET',
+                        data: {category:category},
+                        success: function(data){
+                            $('#books-table').html(data);
+                        }
+                    })
+                })
+            });
+    </script>
 </body>
 </html>

@@ -19,7 +19,10 @@ Route::prefix('/books')->group(function(){
     Route::get('/permanent-delete/{id}',[BookController::class,'forceDelete'])->name('books.delete');
 
     Route::get('/export-excel',[BookController::class,'exportExcel'])->name('books.export.excel');
-    Route::get('/export-pdf',[BookController::class,'exportExcel'])->name('books.export.pdf');
+    Route::get('/export-pdf',[BookController::class,'exportPdf'])->name('books.export.pdf');
+
+    Route::get('/list', [BookController::class, 'bookCategory'])->name('books.category.filter');
+    Route::get('/search',[BookController::class,'bookSearch'])->name('books.search');
 
 });
 

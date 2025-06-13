@@ -15,7 +15,7 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-primary">Filter</button>
+
                     <a href="{{ route('books.export.excel') }}" class="btn btn-warning fw-bold">Export to Excel <img src="{{ asset('excel.png') }}" width="25"></a>
                     <a href="{{ route('books.export.pdf') }}" class="btn btn-success fw-bold ">Download PDF <img src="{{ asset('arrow.png') }}" width="15"></a>
                 </div>
@@ -43,7 +43,7 @@
                     <th class="border-end">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="books-table">
                 @forelse ($books as $book)
                     <tr>
                         <td>{{ $book->book_id }}</td>
@@ -67,9 +67,11 @@
                             @endforeach
                         </td>
                         <td>{{ $book->supplier->name ?? 'N/A' }}</td>
-                        <td class="d-flex gap-2">
-                            <a href="{{ route('books.edit',$book->id) }}" class="btn btn-sm "><img src="{{ asset('document-edit_114472.ico') }}" width="35"></a>
-                            <a href="{{ route('books.destroy',$book->id) }}" class="btn  btn-sm" onclick="return confirm('Are you sure you want to delete?');"><img src="{{ asset('delete.png') }}" width="35"></a>
+                        <td >
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('books.edit',$book->id) }}" class="btn btn-sm "><img src="{{ asset('document-edit_114472.ico') }}" width="35"></a>
+                                <a href="{{ route('books.destroy',$book->id) }}" class="btn  btn-sm" onclick="return confirm('Are you sure you want to delete?');"><img src="{{ asset('delete.png') }}" width="35"></a>
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -78,4 +80,8 @@
             </tbody>
         </table>
     </div>
+    <div class="d-flex justify-content-end">
+        {{ $books->links() }}
+    </div>
 @endsection
+

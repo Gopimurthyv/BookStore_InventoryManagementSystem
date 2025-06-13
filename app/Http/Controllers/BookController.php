@@ -193,6 +193,7 @@ class BookController extends Controller
         return response()->json($states);
     }
 
+//soft deletes....
     public function trash(){
         $trashedBooks = Book::onlyTrashed()->paginate(10);
         return view('books.trash', compact('trashedBooks'));
@@ -210,13 +211,42 @@ class BookController extends Controller
         return redirect()->route('books.trash')->with('success','Books Deleted Permanently..');
     }
 
+// Export to Excel ...
     public function exportExcel(){
         return Excel::download(new BookExport,'books.xlsx');
     }
-
+// Download PDF
     public function exportPdf(){
         $books = Book::all();
         $pdf = Pdf::loadView('books.pdf',compact('books'));
         return $pdf->download('books_list.pdf');
+    }
+
+// Ajax Search/Filter
+    public function bookCategory(Request $request){
+        $query = Book::with(['authors','supplier','stocks','country','state'])->whereNull('deleted_at');
+
+        if($request->filled('category')){
+            $query->where('categories', 'like', '%'.$request->category.'%');
+        }
+
+        $books = $query->latest()->get();
+
+        return view('books.book-list', compact('books'))->render();
+    }
+
+    public function bookSearch(Request $request){
+        $query = $request->search;
+        $books = Book::with(['authors','supplier'])
+                    ->where('title','like',"%{$query}%")
+                    ->orWhereHas("authors",function($a) use ($query){
+                        $a->where('name',"like","%{$query}%");
+                    })
+                    ->orWhereHas("supplier",function($s) use ($query){
+                        $s->where('name',"like","%{$query}%");
+                    })
+                    ->get();
+
+        return view('books.book-searchTable', compact('books'))->render();
     }
 }

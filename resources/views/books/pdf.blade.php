@@ -12,8 +12,8 @@
         <thead>
             <tr>
                 <th>Book ID</th>
+                <th>Cover Image</th>
                 <th>Title</th>
-                <th>ISBN</th>
                 <th>Language</th>
                 <th>Price</th>
                 <th>Country</th>
@@ -24,12 +24,12 @@
             @foreach($books as $book)
             <tr>
                 <td>{{ $book->book_id }}</td>
+                <td><img src="{{ public_path('/storage/images/'.$book->book_cover) }}" width="50" height="50"></td>
                 <td>{{ $book->title }}</td>
-                <td>{{ $book->isbn }}</td>
                 <td>{{ $book->language }}</td>
                 <td>{{ $book->price }}</td>
-                <td>{{ $book->country }}</td>
-                <td>{{ $book->state }}</td>
+                <td>{{ $book->country->name }}</td>
+                <td>{{ $book->state->name }}</td>
             </tr>
             @endforeach
         </tbody>
