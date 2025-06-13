@@ -13,7 +13,7 @@
     <section class="container mt-3">
         <div class="position-absolute top-50 start-50 translate-middle shadow-lg p-5">
             <h2 class="fw-bold text-center mb-3">Sign Up</h2>
-            <form action="{{ url('register') }}" method="POST">
+            <form action="{{ route('register') }}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">Name :</label>
@@ -32,11 +32,12 @@
                     <label class="form-label">Password Confirmation :</label>
                     <input type="password" name="password_confirmation" class="form-control">
                 </div>
-                <div class="text-end">
+                <div class="d-flex align-items-center justify-content-end gap-2">
+                    <a href="{{ url('login') }}" class="link-dark link-opacity-50-hover me-2 text-sm">Already have an account?</a>
                     <button class="btn btn-primary fw-bold" type="submit">Sign up</button>
                 </div>
                 <div class="text-center mt-2">
-                    <a href="{{ url('login') }}" class="link-primary link-opacity-50-hover">Already have an account?</a>
+
                 </div>
             </form>
         </div>

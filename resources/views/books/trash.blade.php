@@ -42,8 +42,16 @@
                         <td>{{ $book->supplier->name ?? 'N/A' }}</td>
                         <td>{{ $book->deleted_at->format('Y-m-d H:i') }}</td>
                         <td>
-                            <a href="{{ route('books.restore',$book->id) }}" class="btn btn-sm btn-warning">Restore</a>
-                            <a href="{{ route('books.delete',$book->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete?');">Delete Permanently</a>
+                            <div class="d-flex">
+                                <form action="{{ route('books.restore', $book->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm" onclick="return confirm('Are you sure you want to restore this book?')">
+                                        <img src="{{ asset('backup.png') }}" width="25" height="25">
+                                    </button>
+                                </form>
+
+                                <a href="{{ route('books.delete',$book->id) }}" class="btn btn-sm" onclick="return confirm('Are you sure you want to delete?');"><img src="{{ asset('delete (1).png') }}" width="25" height="25"></a>
+                            </div>
                         </td>
                     </tr>
                 @empty

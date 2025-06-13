@@ -9,7 +9,10 @@
                 <form class="d-flex justify-center" >
                     <input type="search" placeholder="SEARCH" id="search" name="search" class="form-control me-2">
                 </form>
-                <a href="{{ url('logout') }}" class="btn btn-primary">Logout</a>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button class="btn btn-primary">Logout</button>
+                </form>
             </div>
         </nav>
     </header>

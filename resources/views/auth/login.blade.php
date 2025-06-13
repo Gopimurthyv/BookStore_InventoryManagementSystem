@@ -13,7 +13,7 @@
 
         <div class="position-absolute top-50 start-50 translate-middle shadow-lg p-5">
             <h2 class="fw-bold text-center mb-3">Login</h2>
-            <form action="{{ url('login') }}" method="POST">
+            <form action="{{ route('login') }}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">Email :</label>
@@ -29,11 +29,12 @@
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="text-end">
-                    <button class="btn btn-primary" type="submit">Login</button>
+                <div class="d-flex align-items-center justify-content-end gap-2">
+                    <a href="{{ url('register') }}" class="link-dark link-opacity-50-hover text-sm me-2">Create New Account</a>
+                    <button class="btn btn-primary fw-bold" type="submit">Login</button>
                 </div>
                 <div class="text-center mt-2">
-                    <a href="{{ url('register') }}" class="link-primary link-opacity-50-hover">Create New Account</a>
+
                 </div>
             </form>
         </div>
